@@ -11,7 +11,7 @@ export const reqOnlineExam =(id) => axios ({
   method:'POST',
   url:'/userService/userExam/getFirstExamTitle',
   data:{
-    id:1
+    id:id
   }
 })
 

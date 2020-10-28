@@ -42,11 +42,12 @@ export default {
   components: {
     Nothing,
   },
-  data () {
+  data() {
     return {
       myData: {},
       id: {},
       show: true,
+      _this: this,
     };
   },
   mounted: function () {
@@ -61,8 +62,11 @@ export default {
         }
       });
     },
-    goto (path) {
-      return this.$router.push(path);
+    goto(path) {
+      return this.$router.push({
+        path: path,
+        query: { examPaperId: this.$route.query.id },
+      });
     },
   },
 };

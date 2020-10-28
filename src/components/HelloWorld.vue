@@ -13,7 +13,6 @@
       </div>
     </div>
     <!-- 循环结束 -->
-
   </div>
 </template>
 
@@ -21,7 +20,7 @@
 import { reqOnlineExamGetExamType } from "../api/index";
 export default {
   name: "HelloWorld",
-  data () {
+  data() {
     return {
       myData: {},
     };
@@ -35,9 +34,9 @@ export default {
         this.myData = response.data;
       });
     },
-    goto (path, id) {
+    goto(path, id) {
       this.$router.push({
-        path: path,
+        path: "/bank",
         query: {
           id: id,
         },
@@ -45,7 +44,7 @@ export default {
     },
   },
   computed: {
-    isShow () {
+    isShow() {
       return this.$route.meta.isShow;
     },
   },

@@ -193,7 +193,9 @@ export default {
   methods: {
     // 获取数据
     get_data: function () {
-      reqOnlineExam().then((response) => {
+      console.log(this.$route.query);
+      console.log("this.$route.query.examPaperId");
+      reqOnlineExam(this.$route.query.examPaperId).then((response) => {
         this.myList = response.data;
       });
     },
@@ -207,7 +209,12 @@ export default {
         this.sort + 1
       ).then((response) => {
         console.log(response);
-        this.reload(); //重新刷新页面
+        this.myList = response.data;
+        // 考试题选中时
+        this.disabled = true;
+        this.isActive = false;
+        this.isActive = false;
+        // this.reload(); //重新刷新页面
       });
       this.sort++;
     },
