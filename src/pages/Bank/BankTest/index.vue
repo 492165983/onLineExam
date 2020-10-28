@@ -15,28 +15,12 @@
         <!-- 题目 -->
         <div class="p">{{myList.data.title}}</div>
         <!-- 内容 -->
-        <div
-          class="change"
-          v-for="(item,index) in myList.data.texamAnswerList"
-          :key="index"
-          @change="onChange(item)"
-        >
+        <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @change="onChange(item)">
           <div class="active1">
             <div class="circle">
-              <span
-                :class="{ active: value === 'A' ? '#ffffff' : isChecked }"
-                @click="click(index)"
-              >A</span>
+              <span :class="{ active: value === 'A' ? '#ffffff' : isChecked }" @click="click(index)">A</span>
             </div>
-            <input
-              type="radio"
-              name="text"
-              style="display: none"
-              value="A"
-              id="a"
-              :v-model="value"
-              :isChecked="isChecked"
-            />
+            <input type="radio" name="text" style="display: none" value="A" id="a" :v-model="value" :isChecked="isChecked" />
             <label for="a" @click="click(index)">{{item.content}}</label>
           </div>
         </div>
@@ -46,29 +30,12 @@
         <!-- 题目 -->
         <div class="p">{{myList.data.title}}</div>
         <!-- 内容 -->
-        <div
-          class="change"
-          v-for="(item,index) in myList.data.texamAnswerList"
-          :key="index"
-          :v-model="change"
-          @change="onChange(item)"
-        >
+        <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" :v-model="change" @change="onChange(item)">
           <div class="active1">
             <div class="circle">
-              <span
-                :class="{ active: value === 'A' ? '#ffffff' : isChecked }"
-                @click="click(index)"
-              >A</span>
+              <span :class="{ active: value === 'A' ? '#ffffff' : isChecked }" @click="click(index)">A</span>
             </div>
-            <input
-              type="checkbox"
-              name="text"
-              style="display: none"
-              value="A"
-              id="a"
-              :v-model="value"
-              :isChecked="isChecked"
-            />
+            <input type="checkbox" name="text" style="display: none" value="A" id="a" :v-model="value" :isChecked="isChecked" />
             <label for="a">{{item.content}}</label>
           </div>
         </div>
@@ -83,12 +50,7 @@
     <!-- 下一题按钮 -->
     <!-- itemNum 试卷的数量 不等于它的长度 v-if="itemNum !== itemDetail.length" -->
     <div class="next" v-if="isDisplay === true">
-      <button
-        class="btn"
-        @click="goto(index)"
-        :disabled="disabled"
-        :class="{ active5: isActive }"
-      >下一题</button>
+      <button class="btn" @click="goto(index)" :disabled="disabled" :class="{ active5: isActive }">下一题</button>
     </div>
     <div class="next" v-if="isDisplay === false">
       <button @click="submit" :class="{ active5: isActive }">提交</button>
@@ -166,20 +128,25 @@ import { reqOnlineExam, reqNextExam } from "../../../api/index";
 export default {
   name: "BankTest",
   inject: ["reload"], // 点击下一题刷新页面
-  data() {
+  data () {
     return {
       value: "", //是单选框的值
       isChecked: false, // 单选框是否选中
       isReady: false,
-      myList: {}, // 题库
+      myList: {
+        data () {
+          return {
+            sort: 1
+          }
+        }
+      }, // 题库
       isActive: false, //按钮文字颜色
       change: "",
       radio: "1", //测试的值
       check: true, // 是否选中
       index: "",
       answer: "", //题目的答案
-      sort: 1, // 题目序列
-      // choosedResult: null, //当前选择的题号
+      // sort: 1, // 题目序列
       disabled: true, // 按钮点击与不能点击
       show: false, // 提交按钮
       isDisplay: true, //下一题与提交按钮的显示隐藏
@@ -213,7 +180,7 @@ export default {
         }
       });
     },
-    goto(index) {
+    goto (index) {
       //点击下一题
       reqNextExam(
         this.myList.data.answer,
@@ -232,7 +199,7 @@ export default {
       this.sort++;
     },
 
-    onChange() {
+    onChange () {
       // 考试题选中时
       this.disabled = false;
       this.isActive = true;
@@ -243,11 +210,11 @@ export default {
       this.disabled = false;
       this.isActive = true;
     },
-    submit() {
+    submit () {
       // 提交按钮
       this.show = true;
     },
-    chargeBtn(action, done) {
+    chargeBtn (action, done) {
       // 确认OR　取消
       if (action === "cancel") {
         // 取消按钮
@@ -258,7 +225,7 @@ export default {
       }
       done();
     },
-    chargeX() {
+    chargeX () {
       //点击X 关闭弹出框
       this.show = false;
     },

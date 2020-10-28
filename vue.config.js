@@ -1,6 +1,7 @@
+
 module.exports = {
   lintOnSave: false,
-
+  publicPath: './',
   devServer: {
       // vue项目启动时的ip地址和端口
       port: 8000,

@@ -2,14 +2,14 @@
 <template>
   <div class="hello" v-if="isShow">
     <!-- 循环开始 -->
-    <div class="financial" v-for="(myValue,name) in myData.data" :key="name">
+    <div class="financial" v-for="item in myData.data" :key="item.typeName">
       <div class="financialSystem">
         <img src="../assets/jinrong.png" alt />
-        <span>{{name}}类</span>
+        <span>{{item.typeName}}类</span>
       </div>
       <p class="line"></p>
       <div class="system">
-        <div @click="goto('/bank',item.id)" v-for="item in myValue" :key="item.id">{{item.examName}}</div>
+        <div @click="goto('/bank',userExamType.examPaperId)" v-for="userExamType in item.userExamTypes" :key="userExamType.examPaperId">{{userExamType.examPaperName}}</div>
       </div>
     </div>
     <!-- 循环结束 -->
@@ -20,7 +20,7 @@
 import { reqOnlineExamGetExamType } from "../api/index";
 export default {
   name: "HelloWorld",
-  data() {
+  data () {
     return {
       myData: {},
     };
@@ -34,7 +34,7 @@ export default {
         this.myData = response.data;
       });
     },
-    goto(path, id) {
+    goto (path, id) {
       this.$router.push({
         path: "/bank",
         query: {
@@ -44,7 +44,7 @@ export default {
     },
   },
   computed: {
-    isShow() {
+    isShow () {
       return this.$route.meta.isShow;
     },
   },
@@ -100,7 +100,7 @@ export default {
   margin: 30px 0;
 }
 .system div:nth-child(odd) {
-  margin-right: 160px;
+  margin-right: 100px;
 }
 .system div:nth-child(2) {
   margin-right: 100px;
