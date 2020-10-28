@@ -7,7 +7,7 @@ import VueCookies from 'vue-cookies'
 
 // 引入store
 // import store from './store/index'
-import { RadioGroup, Radio, Checkbox, CheckboxGroup ,Button,Card,Dialog} from 'vant';
+import { RadioGroup, Radio, Checkbox, CheckboxGroup ,Button,Card,Dialog,Toast} from 'vant';
 Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 Vue.use(Radio);
@@ -16,8 +16,8 @@ Vue.use(Button);
 Vue.use(Card);
 Vue.use(Dialog);
 Vue.use(Resource);
-Vue.use(VueCookies)
-
+Vue.use(VueCookies);
+Vue.use(Toast);
 
 
 import './utils/rem' //移动端适配

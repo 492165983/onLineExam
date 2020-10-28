@@ -184,6 +184,7 @@ export default {
       show: false, // 提交按钮
       isDisplay: true, //下一题与提交按钮的显示隐藏
       type: 1, //  题目类型
+      _this: this,
     };
   },
   computed: {},
@@ -193,13 +194,25 @@ export default {
   methods: {
     // 获取数据
     get_data: function () {
-      console.log(this.$route.query);
-      console.log("this.$route.query.examPaperId");
-      reqOnlineExam(this.$route.query.examPaperId).then((response) => {
-        this.myList = response.data;
+      let _this = this;
+      reqOnlineExam(_this.$route.query.examPaperId).then((response) => {
+        if (response.data.code == 200) {
+          if (response.data.data.id == null) {
+            _this.$toast("系统异常");
+            setTimeout(function () {
+              _this.$router.go(-1);
+            }, 2000);
+          } else {
+            _this.myList = response.data;
+          }
+        } else {
+          _this.$toast("系统异常");
+          setTimeout(function () {
+            _this.$router.go(-1);
+          }, 2000);
+        }
       });
     },
-
     goto(index) {
       //点击下一题
       reqNextExam(

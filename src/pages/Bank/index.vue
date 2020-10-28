@@ -44,7 +44,11 @@ export default {
   },
   data() {
     return {
-      myData: {},
+      myData: {
+        data: {
+          examName: "",
+        },
+      },
       id: {},
       show: true,
       _this: this,
