@@ -14,14 +14,24 @@
       <div v-if="myList.data.type=== 1">
         <!-- 题目 -->
         <div class="p">{{myList.data.title}}</div>
+        <!-- 图片 -->
+        <div class="img">
+          <img :src="myList.data.titleImg" alt="图片">
+        </div>
         <!-- 内容 -->
-        <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @change="onChange(item)">
+        <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @click="click(index)" @change="onChange(item)">
           <div class="active1">
             <div class="circle">
-              <span :class="{ active: value === 'A' ? '#ffffff' : isChecked }" @click="click(index)">A</span>
+              <span v-if="index === 0" :class="{ active: isChecked === 'A' }">A</span>
+              <span v-if="index === 1" :class="{ active: isChecked === 'B' }">B</span>
+              <span v-if="index === 2" :class="{ active: isChecked === 'C' }">C</span>
+              <span v-if="index === 3" :class="{ active: isChecked === 'D' }">D</span>
             </div>
-            <input type="radio" name="text" style="display: none" value="A" id="a" :v-model="value" :isChecked="isChecked" />
-            <label for="a" @click="click(index)">{{item.content}}</label>
+            <!-- <input type="radio" name="text" style="display: none" :value="index" id="a" :isChecked="isChecked" /> -->
+            <span for="a">{{item.content}}</span>
+          </div>
+          <div class="photo">
+            <img :src="item.url" alt="内容选项图片">
           </div>
         </div>
       </div>
@@ -133,20 +143,14 @@ export default {
       value: "", //是单选框的值
       isChecked: false, // 单选框是否选中
       isReady: false,
-      myList: {
-        data () {
-          return {
-            sort: 1
-          }
-        }
-      }, // 题库
+      myList: {}, // 题库
       isActive: false, //按钮文字颜色
       change: "",
       radio: "1", //测试的值
       check: true, // 是否选中
       index: "",
+      sort: 1,
       answer: "", //题目的答案
-      // sort: 1, // 题目序列
       disabled: true, // 按钮点击与不能点击
       show: false, // 提交按钮
       isDisplay: true, //下一题与提交按钮的显示隐藏
@@ -181,20 +185,20 @@ export default {
       });
     },
     goto (index) {
+      console.log(index++);
       //点击下一题
+      console.log(this.sort++);
       reqNextExam(
         this.myList.data.answer,
         this.sort,
         this.myList.data.examPaperId,
         this.sort + 1
       ).then((response) => {
-        console.log(response);
         this.myList = response.data;
         // 考试题选中时
         this.disabled = true;
         this.isActive = false;
-        this.isActive = false;
-        // this.reload(); //重新刷新页面
+
       });
       this.sort++;
     },
@@ -206,7 +210,9 @@ export default {
     },
     click: function (index) {
       // 点击单选框选中时
-      this.isChecked = true;
+      let arr = ['A', 'B', 'C', 'D']
+      this.isChecked = arr[index];
+      console.log('选中的值', this.isChecked)
       this.disabled = false;
       this.isActive = true;
     },
@@ -320,7 +326,15 @@ export default {
 label {
   margin-left: 30px;
 }
-
+.change .photo {
+  width: 400px;
+  height: 150px;
+  margin: 15px auto;
+}
+.change .photo img {
+  width: 100%;
+  height: 100%;
+}
 .main {
   margin: 0 55px 10px 30px;
 
@@ -341,6 +355,16 @@ label {
   text-align: left;
   white-space: nowrap;
 }
+/* 题目的图片 */
+.main .img {
+  width: 548px;
+  height: 273px;
+  margin: 39px auto;
+}
+.main .img img {
+  width: 100%;
+  height: 100%;
+}
 .next {
   width: 640px;
   height: 96px;
@@ -360,48 +384,6 @@ label {
   font-family: PingFang SC;
   font-weight: 500;
   /* background: #e4e5ea; */
-}
-
-/* 这里都是静态测试 */
-.container {
-  font-size: 32px;
-  font-family: PingFang SC;
-  font-weight: 500;
-  color: #343434;
-  line-height: 60px;
-  text-align: left;
-  margin: 0 55px 62px 40px;
-}
-.container p {
-  font-size: 32px;
-  font-family: PingFang SC;
-  font-weight: 500;
-  color: #343434;
-  line-height: 60px;
-}
-.containerOne {
-  margin: 10px;
-  height: 100%;
-}
-.containerOne .ul {
-  height: 100%;
-  padding: 10px;
-  font-size: 32px;
-  font-family: PingFang SC;
-  font-weight: 500;
-  color: #343434;
-  line-height: 40px;
-}
-.containerOne .ul li {
-  line-height: 50px;
-}
-.van-radio {
-  height: 50px;
-  display: flex;
-}
-
-.van-radio .van-radio {
-  margin-left: 30px !important;
 }
 
 /* 未全部做完合格的提示框 */
