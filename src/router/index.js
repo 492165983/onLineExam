@@ -21,7 +21,8 @@ import routes from './routes'
 // 使用路由
 Vue.use(VueRouter)
 export default new VueRouter({
-  mode: 'history',
+  mode: 'hash',
+  base: process.env.baseURL,
   routes
 })
 

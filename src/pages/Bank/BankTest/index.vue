@@ -3,50 +3,65 @@
     <!-- 图标 -->
     <div class="img">
       <div class="BigQ">
-        <p>Q{{myList.data.sort}}</p>
+        <p>Q{{sort}}</p>
         <div class="three"></div>
       </div>
     </div>
 
     <!-- 试题部分1 -->
-    <div class="main">
+    <div class="main" v-if="myList.data">
       <!-- 单选题 -->
       <div v-if="myList.data.type=== 1">
-        <!-- 题目 -->
-        <div class="p">{{myList.data.title}}</div>
-        <!-- 图片 -->
-        <div class="img">
-          <img :src="myList.data.titleImg" alt="图片">
-        </div>
-        <!-- 内容 -->
-        <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @click="click(index)" @change="onChange(item)">
-          <div class="active1">
-            <div class="circle">
-              <span v-if="index === 0" :class="{ active: isChecked === 'A' }">A</span>
-              <span v-if="index === 1" :class="{ active: isChecked === 'B' }">B</span>
-              <span v-if="index === 2" :class="{ active: isChecked === 'C' }">C</span>
-              <span v-if="index === 3" :class="{ active: isChecked === 'D' }">D</span>
-            </div>
-            <!-- <input type="radio" name="text" style="display: none" :value="index" id="a" :isChecked="isChecked" /> -->
-            <span for="a">{{item.content}}</span>
+        <div>
+          <!-- 题目 -->
+          <div class="p">{{myList.data.title}}</div>
+          <!-- 图片 -->
+          <div class="img" v-if="myList.data.titleImg">
+            <img :src="myList.data.titleImg" alt="">
           </div>
-          <div class="photo">
-            <img :src="item.url" alt="内容选项图片">
+          <!-- 内容 -->
+          <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @click="click(index)">
+            <div class="active1">
+              <div class="circle">
+                <span v-if="index === 0" :class="{ active: isChecked === 'A' }">A</span>
+                <span v-if="index === 1" :class="{ active: isChecked === 'B' }">B</span>
+                <span v-if="index === 2" :class="{ active: isChecked === 'C' }">C</span>
+                <span v-if="index === 3" :class="{ active: isChecked === 'D' }">D</span>
+              </div>
+              <span for="a">{{item.content}}</span>
+            </div>
+            <!--选项中的图片 -->
+            <div class="photo" v-if="item.url">
+              <img :src="item.url" alt="">
+            </div>
           </div>
         </div>
       </div>
+
       <!-- 多选 -->
       <div v-else-if="myList.data.type=== 2">
         <!-- 题目 -->
         <div class="p">{{myList.data.title}}</div>
+        <!-- 图片 -->
+        <div class="img" v-if="myList.data.titleImg">
+          <img :src="myList.data.titleImg" alt="">
+        </div>
         <!-- 内容 -->
-        <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" :v-model="change" @change="onChange(item)">
+        <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @click="checkbox(index)">
           <div class="active1">
             <div class="circle">
-              <span :class="{ active: value === 'A' ? '#ffffff' : isChecked }" @click="click(index)">A</span>
+              <span v-if="index === 0" :class="{ active: checkArr.indexOf('A')>-1 }">A</span>
+              <span v-if="index === 1" :class="{ active: checkArr.indexOf('B')>-1 }">B</span>
+              <span v-if="index === 2" :class="{ active: checkArr.indexOf('C')>-1 }">C</span>
+              <span v-if="index === 3" :class="{ active: checkArr.indexOf('D')>-1 }">D</span>
+
             </div>
-            <input type="checkbox" name="text" style="display: none" value="A" id="a" :v-model="value" :isChecked="isChecked" />
             <label for="a">{{item.content}}</label>
+
+          </div>
+          <!--选项中的图片 -->
+          <div class="photo" v-if="item.url">
+            <img :src="item.url" alt="">
           </div>
         </div>
       </div>
@@ -54,13 +69,29 @@
       <div v-else-if="myList.data.type=== 3">
         <!-- 题目 -->
         <div class="p">{{myList.data.title}}</div>
+        <!-- 图片 -->
+        <div class="img" v-if="myList.data.titleImg">
+          <img :src="myList.data.titleImg" alt="">
+        </div>
+        <!-- 内容 -->
+        <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @click="click(index)">
+          <div class="active1">
+            <div class="circle">
+              <span v-if="index === 0" :class="{ active: isChecked === 'A' }">A</span>
+              <span v-if="index === 1" :class="{ active: isChecked === 'B' }">B</span>
+            </div>
+            <span for="a">{{item.content}}</span>
+          </div>
+          <div class="photo" v-if="item.url">
+            <img :src="item.url" alt="">
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- 下一题按钮 -->
-    <!-- itemNum 试卷的数量 不等于它的长度 v-if="itemNum !== itemDetail.length" -->
     <div class="next" v-if="isDisplay === true">
-      <button class="btn" @click="goto(index)" :disabled="disabled" :class="{ active5: isActive }">下一题</button>
+      <button class="btn" @click="goto(index)" :disabled="disabled" :class="{ active5: !disabled }">下一题</button>
     </div>
     <div class="next" v-if="isDisplay === false">
       <button @click="submit" :class="{ active5: isActive }">提交</button>
@@ -80,20 +111,20 @@
         </div>
         <div class="number">
           <div class="wrong">
-            <div>3</div>
+            <div>{{myList.data.errCounts}}</div>
             <div>做错数</div>
           </div>
           <div class="notDone">
-            <div>0</div>
+            <div>{{myList.data.notDoneCounts}}</div>
             <div>未做题</div>
           </div>
           <div class="score">
-            <div>97</div>
+            <div>{{myList.data.totalScore}}</div>
             <div>得分</div>
           </div>
         </div>
         <div class="submit">
-          <div class="now">现在交卷</div>
+          <div class="now" @click="ensure">确定</div>
         </div>
       </van-dialog>
 
@@ -134,28 +165,29 @@
 </template>
 
 <script>
-import { reqOnlineExam, reqNextExam } from "../../../api/index";
+import { reqOnlineExam, reqNextExam, reqOnlineExamGetExamSubmit } from "../../../api/index";
 export default {
   name: "BankTest",
   inject: ["reload"], // 点击下一题刷新页面
   data () {
     return {
-      value: "", //是单选框的值
-      isChecked: false, // 单选框是否选中
-      isReady: false,
-      myList: {}, // 题库
-      isActive: false, //按钮文字颜色
-      change: "",
-      radio: "1", //测试的值
-      check: true, // 是否选中
+      myList: {},// 返回的数据,
+      isChecked: false, // 单选框是否被选中
+      checkArr: [],
+      isDisplay: true, //下一题按钮（默认）或者提交按钮
+      titleSize: [],   //题目总数
+      isActive: false, //下一题和提交按钮文字颜色  默认灰色
       index: "",
-      sort: 1,
+      sort: 1,   //题目序号
       answer: "", //题目的答案
       disabled: true, // 按钮点击与不能点击
-      show: false, // 提交按钮
-      isDisplay: true, //下一题与提交按钮的显示隐藏
+      show: false, // 弹出框的有无
       type: 1, //  题目类型
       _this: this,
+      sunmitData: [],  // 提交的数据 
+      errCounts: 0, //错题数
+      notDoneCounts: 0,// 未做数
+      totalScore: 0, //得分
     };
   },
   computed: {},
@@ -169,7 +201,7 @@ export default {
       reqOnlineExam(_this.$route.query.examPaperId).then((response) => {
         if (response.data.code == 200) {
           if (response.data.data.id == null) {
-            _this.$toast("系统异常");
+            _this.$toast("暂无试题");
             setTimeout(function () {
               _this.$router.go(-1);
             }, 2000);
@@ -177,37 +209,27 @@ export default {
             _this.myList = response.data;
           }
         } else {
-          _this.$toast("系统异常");
+          _this.$toast("暂无试题");
           setTimeout(function () {
             _this.$router.go(-1);
           }, 2000);
         }
-      });
-    },
-    goto (index) {
-      console.log(index++);
-      //点击下一题
-      console.log(this.sort++);
-      reqNextExam(
-        this.myList.data.answer,
-        this.sort,
-        this.myList.data.examPaperId,
-        this.sort + 1
-      ).then((response) => {
-        this.myList = response.data;
-        // 考试题选中时
-        this.disabled = true;
-        this.isActive = false;
+        // 选项有无图片的占位情况
+        if (item.url === null) {
+          _this.null = true
+        } else {
+          _this.null = false
+        }
+        // 题目有无照片的占位情况
+        if (myList.data.titleImg === null) {
+          _this.null = true
+        } else {
+          _this.null = false
+        }
 
       });
-      this.sort++;
     },
 
-    onChange () {
-      // 考试题选中时
-      this.disabled = false;
-      this.isActive = true;
-    },
     click: function (index) {
       // 点击单选框选中时
       let arr = ['A', 'B', 'C', 'D']
@@ -216,9 +238,63 @@ export default {
       this.disabled = false;
       this.isActive = true;
     },
+    checkbox (index) {
+      // 点击多选框选中时
+      let arrBox = ['A', 'B', 'C', 'D']
+      if (this.checkArr.indexOf(arrBox[index]) > -1) {
+        this.checkArr = this.checkArr.filter(item => item !== arrBox[index])
+      } else {
+        this.checkArr.push(arrBox[index])
+      }
+      console.log('选中的值', this.checkArr)
+      this.disabled = this.checkArr.length ? false : true;
+      // this.isActive = true;
+    },
+    //点击下一题
+    goto () {
+      reqOnlineExamGetExamSubmit(
+        this.myList.data.answer,
+        this.sort,
+        this.myList.data.examPaperId,
+      ).then((response) => {
+        if (response.data.code === 200) {
+          return reqNextExam(
+            this.myList.data.answer,
+            this.sort,
+            this.myList.data.examPaperId,
+            this.sort + 1,
+          ).then((response) => {
+            this.myList = response.data;
+            // 考试题选中时
+            this.disabled = true;
+            this.isChecked = false;
+            this.isActive = false;
+            this.sort++
+            if (this.myList.data.titleSize === this.myList.data.titleSize) {
+              this.isDisplay = false;
+            }
+          });
+        }
+      })
+
+    },
     submit () {
-      // 提交按钮
-      this.show = true;
+      reqOnlineExamGetExamSubmit(
+        this.myList.data.answer,
+        this.sort,
+        this.myList.data.examPaperId,
+      ).then((response) => {
+        this.myList = response.data
+        // 定义一个变量用来储存 提交的数据  如题目总数，id,回答答案
+        let submitData = [this.myList.data.errCounts, this.myList.data.notDoneCounts, this.myList.data.totalScore]
+        this.show = true;
+      })
+
+    },
+    ensure () {
+      this.show = false;
+      this.$router.go(-1);
+      this.reload();
     },
     chargeBtn (action, done) {
       // 确认OR　取消
@@ -234,6 +310,7 @@ export default {
     chargeX () {
       //点击X 关闭弹出框
       this.show = false;
+      this.$router.go(-1)
     },
   },
 };
@@ -295,6 +372,7 @@ export default {
 .circle {
   width: 50px;
   height: 50px;
+  margin-right: 30px;
   border-radius: 50px;
   border: 2px solid #dedede;
   position: relative;
@@ -321,7 +399,7 @@ export default {
 }
 /* 选项部分 */
 .main .change {
-  margin: 0 20px 120px 20px;
+  margin: 0 20px 60px 20px;
 }
 label {
   margin-left: 30px;
@@ -354,6 +432,7 @@ label {
   line-height: 60px;
   text-align: left;
   white-space: nowrap;
+  margin-bottom: 30px;
 }
 /* 题目的图片 */
 .main .img {
@@ -383,7 +462,8 @@ label {
   font-size: 32px;
   font-family: PingFang SC;
   font-weight: 500;
-  /* background: #e4e5ea; */
+  background: #e4e5ea;
+  color: #ffffff;
 }
 
 /* 未全部做完合格的提示框 */

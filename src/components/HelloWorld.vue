@@ -97,7 +97,7 @@ export default {
 }
 .system div {
   white-space: nowrap;
-  margin: 30px 0;
+  margin: 20px 0;
 }
 .system div:nth-child(odd) {
   margin-right: 100px;

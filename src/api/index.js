@@ -5,8 +5,24 @@ axios.defaults.withCredentials = true;
 
 /* 携带 token*/
 axios.defaults.headers.common['Authorization'] = 'eyJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxMjM0NTYiLCJzdWIiOiJ7XCJ1c2VySWRcIjoxMjgwNzEyODQyNDQxMjI0MTk1LFwidXNlck5hbWVcIjpcInhpYW9odWFodWFcIixcInJvbGVJZExpc3RcIjpbXCJ1c2VyX3JvbGVcIl19IiwidXNlcl9uYW1lIjoiYWRtaW4iLCJuaWNrX25hbWUiOiJYLXJhcGlkbyIsImlzcyI6InhpYW9odWFodWEiLCJleHAiOjE2MDYyOTg4NDUsImlhdCI6MTYwMzcwNjg0NSwianRpIjoiMTI4MDcxMjg0MjQ0MTIyNDE5NSJ9.CjNoj9YA4IWlFjBbmtTeb0kg-jZWq2JSuAy-fiRGEm4'
+ 
 
-//* 请求在线考试 */
+/* 获取首页题目分类 */   // 第一
+export const reqOnlineExamGetExamType =() => axios ({
+    method:'POST',
+    url:'/userService/userExam/getExamType'
+})
+
+  /* 获取考试信息 */  // 第二
+export const reqOnlineExamGetExamInfo =(id) => axios ({
+    method:'POST',
+    url:'/userService/userExam/getExamInfo',
+    data:{
+      id:id,
+    }
+})
+
+//* 请求在线考试 */  // 第三
 export const reqOnlineExam =(id) => axios ({
   method:'POST',
   url:'/userService/userExam/getFirstExamTitle',
@@ -15,7 +31,7 @@ export const reqOnlineExam =(id) => axios ({
   }
 })
 
-/* 获取下一题*/
+/* 获取下一题*/   //第四
 export const reqNextExam =(answer,checkTitleNum,examPaperId,nextTitleNum) => axios({
   method:'post',
   url:'/userService/userExam/getNextExamTitle',
@@ -27,27 +43,13 @@ export const reqNextExam =(answer,checkTitleNum,examPaperId,nextTitleNum) => axi
   }
 })
 
-/* 获取考试详情 */
-export const reqExamDetail = (id) =>axios ({
+/* 提交试卷*/   //第五
+export const reqOnlineExamGetExamSubmit =(answer,checkTitleNum,examPaperId) => axios ({
   method:'post',
-  url:'/userService/userExam/getExamInfo',
+  url:'/userService/userExam/userExamTitleSubmit',
   data:{
-    id:id
+    answer:answer,
+    checkTitleNum:checkTitleNum,
+    examPaperId:examPaperId
   }
 })
-
-
-/* 获取首页题目分类 */
-export const reqOnlineExamGetExamType =() => axios ({
-    method:'POST',
-    url:'/userService/userExam/getExamType'
-  })
-
-  /* 获取考试信息 */
-export const reqOnlineExamGetExamInfo =(id) => axios ({
-    method:'POST',
-    url:'/userService/userExam/getExamInfo',
-    data:{
-      id:id,
-    }
-  })
