@@ -42,7 +42,7 @@ export default {
   components: {
     Nothing,
   },
-  data() {
+  data () {
     return {
       myData: {
         data: {
@@ -61,15 +61,19 @@ export default {
     getInitData: function () {
       reqOnlineExamGetExamInfo(this.$route.query.id).then((response) => {
         this.myData = response.data;
+        window.passScore = response.data.data.passScore
         if (this.myData.data == undefined || this.myData.data == null) {
           this.show = false;
         }
       });
     },
-    goto(path) {
+
+    goto (path) {
       return this.$router.push({
         path: path,
-        query: { examPaperId: this.$route.query.id },
+        query: {
+          examPaperId: this.$route.query.id,
+        }
       });
     },
   },

@@ -20,13 +20,13 @@
             <img :src="myList.data.titleImg" alt="">
           </div>
           <!-- 内容 -->
-          <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @click="click(index)">
+          <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @click="click(item.sort)">
             <div class="active1">
               <div class="circle">
-                <span v-if="index === 0" :class="{ active: isChecked === 'A' }">A</span>
-                <span v-if="index === 1" :class="{ active: isChecked === 'B' }">B</span>
-                <span v-if="index === 2" :class="{ active: isChecked === 'C' }">C</span>
-                <span v-if="index === 3" :class="{ active: isChecked === 'D' }">D</span>
+                <span v-if="item.sort === 1" :class="{ active: isChecked === 'A' }">A</span>
+                <span v-if="item.sort === 2" :class="{ active: isChecked === 'B' }">B</span>
+                <span v-if="item.sort === 3" :class="{ active: isChecked === 'C' }">C</span>
+                <span v-if="item.sort === 4" :class="{ active: isChecked === 'D' }">D</span>
               </div>
               <span for="a">{{item.content}}</span>
             </div>
@@ -37,7 +37,6 @@
           </div>
         </div>
       </div>
-
       <!-- 多选 -->
       <div v-else-if="myList.data.type=== 2">
         <!-- 题目 -->
@@ -47,13 +46,13 @@
           <img :src="myList.data.titleImg" alt="">
         </div>
         <!-- 内容 -->
-        <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @click="checkbox(index)">
+        <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @click="checkbox(item.sort)">
           <div class="active1">
             <div class="circle">
-              <span v-if="index === 0" :class="{ active: checkArr.indexOf('A')>-1 }">A</span>
-              <span v-if="index === 1" :class="{ active: checkArr.indexOf('B')>-1 }">B</span>
-              <span v-if="index === 2" :class="{ active: checkArr.indexOf('C')>-1 }">C</span>
-              <span v-if="index === 3" :class="{ active: checkArr.indexOf('D')>-1 }">D</span>
+              <span v-if="item.sort === 1" :class="{ active: checkArr.indexOf('A')>-1 }">A</span>
+              <span v-if="item.sort === 2" :class="{ active: checkArr.indexOf('B')>-1 }">B</span>
+              <span v-if="item.sort === 3" :class="{ active: checkArr.indexOf('C')>-1 }">C</span>
+              <span v-if="item.sort === 4" :class="{ active: checkArr.indexOf('D')>-1 }">D</span>
 
             </div>
             <label for="a">{{item.content}}</label>
@@ -95,31 +94,40 @@
     </div>
     <div class="next" v-if="isDisplay === false">
       <button @click="submit" :class="{ active5: isActive }">提交</button>
-
+    </div>
+    <div class="nextSubmit" v-if="myList.data">
       <!-- 提交显示合格的提示框 -->
-      <van-dialog class="dialog" v-model="show" show-cancel-button :beforeClose="chargeBtn">
+      <van-dialog class="dialog" v-model="show" v-bind="$data" :beforeClose="chargeBtn">
         <div class="cirX" @click="chargeX()">
           <img src="../../../assets/cha.png" alt />
         </div>
-        <div class="yes">成绩合格</div>
-        <div class="img">
+        <div class="yes" v-if="isOK">成绩合格</div>
+        <div class="yes" v-else>成绩不合格</div>
+        <div class="img" v-if="isOK">
           <img src="../../../assets/hege.png" alt />
         </div>
-        <div class="grade">
+        <div class="img" v-else>
+          <img src="../../../assets/tubiao.png" alt="">
+        </div>
+        <div class="grade" v-if="isOK">
           <p>恭喜你,成绩合格</p>
           <p>已获得资格认证</p>
         </div>
+        <div class="grade" v-else>
+          <p>很遗憾答错了</p>
+          <p>先学懂再练习, 你会收获更好的成绩</p>
+        </div>
         <div class="number">
-          <div class="wrong">
+          <!-- <div class="wrong">
             <div>{{myList.data.errCounts}}</div>
             <div>做错数</div>
           </div>
           <div class="notDone">
             <div>{{myList.data.notDoneCounts}}</div>
             <div>未做题</div>
-          </div>
+          </div> -->
           <div class="score">
-            <div>{{myList.data.totalScore}}</div>
+            <div>{{myResult.data.totalScore}}</div>
             <div>得分</div>
           </div>
         </div>
@@ -127,40 +135,8 @@
           <div class="now" @click="ensure">确定</div>
         </div>
       </van-dialog>
-
-      <!-- 为不合格的提示框 -->
-      <!-- <van-dialog class="dialogNo" v-model="show"  show-cancel-button :beforeClose="chargeBtn">
-        <div class="cirX"  @click="chargeX()">
-          <img src="../../../assets/cha.png" alt="">
-        </div>
-        <div class="yesNo">成绩不合格</div>
-        <div class="imgNo">
-          <img src="../../../assets/tubiao.png" alt="">
-        </div>
-        <div class="gradeNo">
-          <p>很遗憾答错了</p>
-          <p>先学懂再练习, 你会收获更好的成绩</p>
-        </div>
-        <div class="numberNo">
-          <div class="wrongNo">
-            <div>11</div>
-            <div>做错数</div>
-          </div>
-          <div class="notDoneNo">
-            <div>70</div>
-            <div>未做题</div>
-          </div>
-          <div class="scoreNo">
-            <div>19</div>
-            <div>得分</div>
-          </div>
-        </div>
-        <div class="submitNo">
-          <div class="continue">继续答题</div>
-          <div class="nowNo">现在交卷</div>
-        </div>
-      </van-dialog>-->
     </div>
+
   </div>
 </template>
 
@@ -171,29 +147,31 @@ export default {
   inject: ["reload"], // 点击下一题刷新页面
   data () {
     return {
+      myResult: {
+        data: {
+          totalScore: 0
+        }
+      },
       myList: {},// 返回的数据,
-      isChecked: false, // 单选框是否被选中
+      isChecked: '', // 单选框是否被选中
       checkArr: [],
       isDisplay: true, //下一题按钮（默认）或者提交按钮
-      titleSize: [],   //题目总数
       isActive: false, //下一题和提交按钮文字颜色  默认灰色
+      disabled: true, // 按钮点击与不能点击
       index: "",
       sort: 1,   //题目序号
       answer: "", //题目的答案
-      disabled: true, // 按钮点击与不能点击
-      show: false, // 弹出框的有无
+      show: false, // 弹出框的有无  默认不出现
       type: 1, //  题目类型
       _this: this,
-      sunmitData: [],  // 提交的数据 
-      errCounts: 0, //错题数
-      notDoneCounts: 0,// 未做数
-      totalScore: 0, //得分
+      isOK: true // 是否合格
     };
   },
   computed: {},
   mounted: function () {
     this.get_data();
   },
+
   methods: {
     // 获取数据
     get_data: function () {
@@ -215,79 +193,82 @@ export default {
           }, 2000);
         }
         // 选项有无图片的占位情况
-        if (item.url === null) {
-          _this.null = true
-        } else {
-          _this.null = false
-        }
+        // if (item.url === null) {
+        //   _this.null = true
+        // } else {
+        //   _this.null = false
+        // }
         // 题目有无照片的占位情况
-        if (myList.data.titleImg === null) {
-          _this.null = true
-        } else {
-          _this.null = false
-        }
+        // if (myList.data.titleImg === null) {
+        //   _this.null = true
+        // } else {
+        //   _this.null = false
+        // }
 
       });
     },
-
+    // 点击单选框选中时
     click: function (index) {
-      // 点击单选框选中时
       let arr = ['A', 'B', 'C', 'D']
-      this.isChecked = arr[index];
-      console.log('选中的值', this.isChecked)
+      this.isChecked = arr[index - 1];
+      this.answer = this.isChecked;
       this.disabled = false;
       this.isActive = true;
     },
+    // 点击多选框选中时
     checkbox (index) {
-      // 点击多选框选中时
       let arrBox = ['A', 'B', 'C', 'D']
-      if (this.checkArr.indexOf(arrBox[index]) > -1) {
-        this.checkArr = this.checkArr.filter(item => item !== arrBox[index])
+      if (this.checkArr.indexOf(arrBox[index - 1]) > -1) {
+        this.checkArr = this.checkArr.filter(item => item !== arrBox[index - 1])
+        this.answer = this.answer.split(arrBox[index - 1]).join("");
       } else {
-        this.checkArr.push(arrBox[index])
+        this.checkArr.push(arrBox[index - 1])
+        this.answer = this.answer + arrBox[index - 1];
       }
-      console.log('选中的值', this.checkArr)
       this.disabled = this.checkArr.length ? false : true;
-      // this.isActive = true;
+      this.isActive = true;  //按钮文字高亮
     },
     //点击下一题
     goto () {
-      reqOnlineExamGetExamSubmit(
-        this.myList.data.answer,
+      reqNextExam(
+        this.answer,
         this.sort,
         this.myList.data.examPaperId,
+        this.sort + 1,
       ).then((response) => {
-        if (response.data.code === 200) {
-          return reqNextExam(
-            this.myList.data.answer,
-            this.sort,
-            this.myList.data.examPaperId,
-            this.sort + 1,
-          ).then((response) => {
-            this.myList = response.data;
-            // 考试题选中时
-            this.disabled = true;
-            this.isChecked = false;
-            this.isActive = false;
-            this.sort++
-            if (this.myList.data.titleSize === this.myList.data.titleSize) {
-              this.isDisplay = false;
-            }
-          });
+        // if (response.data.data.totalScore >= window.passScore) {
+        //   this.isOK = true
+        // } else {
+        //   this.isOK = false
+        // }
+        this.myList = response.data;
+        // 考试题选中时
+        this.disabled = true;
+        this.isChecked = false;
+        this.isActive = false;
+        this.sort++
+        if (this.myList.data.titleSize != this.sort) {
+          this.isDisplay = true;
+        } else {
+          this.isDisplay = false;
         }
-      })
-
+      });
+      this.checkArr = [];
+      this.isChecked = ''
     },
     submit () {
       reqOnlineExamGetExamSubmit(
-        this.myList.data.answer,
+        this.answer,
         this.sort,
         this.myList.data.examPaperId,
       ).then((response) => {
-        this.myList = response.data
-        // 定义一个变量用来储存 提交的数据  如题目总数，id,回答答案
-        let submitData = [this.myList.data.errCounts, this.myList.data.notDoneCounts, this.myList.data.totalScore]
+        this.myResult = response.data;
         this.show = true;
+        if (response.data.data.totalScore >= window.passScore) {
+          this.isOK = true
+        } else {
+          this.isOK = false
+        }
       })
 
     },
@@ -467,7 +448,7 @@ label {
 }
 
 /* 未全部做完合格的提示框 */
-.next .dialog {
+.nextSubmit .dialog {
   width: 606px;
   height: 724px;
 }
@@ -485,12 +466,12 @@ label {
   color: #333333;
   line-height: 40px;
 }
-.next .dialog .img {
+.nextSubmit .dialog .img {
   width: 362px;
   height: 226px;
   margin: 30px 122px 0 122px;
 }
-.next .dialog .img img {
+.nextSubmit .dialog .img img {
   width: 100%;
   height: 100%;
 }
@@ -510,7 +491,7 @@ label {
 .number {
   display: flex;
   justify-content: space-around;
-  margin: 0px 87px 45px 87px;
+  margin: 0px 87px 35px 87px;
 }
 .wrong {
   display: flex;
@@ -548,18 +529,18 @@ label {
 .submit {
   background: #ff7a21;
   border-radius: 42px;
-  margin: 0 40px 40px 40px;
+  margin: 0 40px 70px 40px;
 }
 .now {
   font-size: 34px;
   font-family: PingFang SC;
   font-weight: 500;
   color: #ffffff;
-  padding: 26px 195px;
+  padding: 26px 195px 26px 195px;
 }
 
 /*  为不合格的提示框 */
-.next .dialogNo {
+.nextSubmit .dialogNo {
   width: 606px;
   height: 724px;
 }
@@ -577,12 +558,12 @@ label {
   color: #333333;
   line-height: 40px;
 }
-.next .dialogNo .imgNo {
+.nextSubmit .dialogNo .imgNo {
   width: 362px;
   height: 226px;
   margin: 30px 122px 0 122px;
 }
-.next .dialogNo .imgNo img {
+.nextSubmit .dialogNo .imgNo img {
   width: 100%;
   height: 100%;
 }
@@ -640,10 +621,10 @@ label {
 }
 .submitNo {
   margin: 0 40px 40px 40px;
-  display: flex;
-  justify-content: space-between;
+  /* display: flex;
+  justify-content: space-between; */
 }
-.continue {
+/* .continue {
   background: #ffffff;
   border: 2px solid #dedede;
   border-radius: 42px;
@@ -653,13 +634,12 @@ label {
   font-weight: 500;
   color: #333333;
   line-height: 10px;
-}
+} */
 .nowNo {
   background: #ff7a21;
   border: 2px solid #dedede;
   border-radius: 42px;
-  padding: 26px 54px;
-  font-size: 30px;
+  padding: 26px 195px;
   font-family: PingFang SC;
   font-weight: 500;
   color: #ffffff;
