@@ -7,7 +7,6 @@
         <div class="three"></div>
       </div>
     </div>
-
     <!-- 试题部分1 -->
     <div class="main" v-if="myList.data">
       <!-- 单选题 -->
@@ -73,16 +72,20 @@
           <img :src="myList.data.titleImg" alt="">
         </div>
         <!-- 内容 -->
-        <div class="change" v-for="(item,index) in myList.data.texamAnswerList" :key="index" @click="click(index)">
+        <div class="change" @click="clickDecide(0)">
           <div class="active1">
             <div class="circle">
-              <span v-if="index === 0" :class="{ active: isChecked === 'A' }">A</span>
-              <span v-if="index === 1" :class="{ active: isChecked === 'B' }">B</span>
+              <span :class="{ active: isCheckedDecide === 'A' }">A</span>
             </div>
-            <span for="a">{{item.content}}</span>
+            <span for="a">正确</span>
           </div>
-          <div class="photo" v-if="item.url">
-            <img :src="item.url" alt="">
+        </div>
+        <div class="change" @click="clickDecide(1)">
+          <div class="active1">
+            <div class="circle">
+              <span :class="{ active: isCheckedDecide === 'B' }">B</span>
+            </div>
+            <span for="a">错误</span>
           </div>
         </div>
       </div>
@@ -154,7 +157,8 @@ export default {
       },
       myList: {},// 返回的数据,
       isChecked: '', // 单选框是否被选中
-      checkArr: [],
+      checkArr: [],   // 多选
+      isCheckedDecide: '', //判断
       isDisplay: true, //下一题按钮（默认）或者提交按钮
       isActive: false, //下一题和提交按钮文字颜色  默认灰色
       disabled: true, // 按钮点击与不能点击
@@ -228,6 +232,14 @@ export default {
       this.disabled = this.checkArr.length ? false : true;
       this.isActive = true;  //按钮文字高亮
     },
+    // 点击判断题目时
+    clickDecide (index) {
+      let arrBoxDecide = ['A', 'B']
+      this.isCheckedDecide = arrBoxDecide[index];
+      this.answer = index;
+      this.disabled = false;
+      this.isActive = true;
+    },
     //点击下一题
     goto () {
       reqNextExam(
@@ -236,15 +248,11 @@ export default {
         this.myList.data.examPaperId,
         this.sort + 1,
       ).then((response) => {
-        // if (response.data.data.totalScore >= window.passScore) {
-        //   this.isOK = true
-        // } else {
-        //   this.isOK = false
-        // }
         this.myList = response.data;
         // 考试题选中时
         this.disabled = true;
         this.isChecked = false;
+        this.isCheckedDecide = false
         this.isActive = false;
         this.sort++
         if (this.myList.data.titleSize != this.sort) {
@@ -270,7 +278,6 @@ export default {
           this.isOK = false
         }
       })
-
     },
     ensure () {
       this.show = false;
@@ -395,7 +402,7 @@ label {
   height: 100%;
 }
 .main {
-  margin: 0 55px 10px 30px;
+  margin: 0 30px 10px 30px;
 
   /* 这里是静态 */
   font-size: 32px;
@@ -414,6 +421,7 @@ label {
   text-align: left;
   white-space: nowrap;
   margin-bottom: 30px;
+  white-space: normal;
 }
 /* 题目的图片 */
 .main .img {
