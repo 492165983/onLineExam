@@ -180,7 +180,10 @@ export default {
     // 获取数据
     get_data: function () {
       let _this = this;
-      reqOnlineExam(_this.$route.query.examPaperId).then((response) => {
+      reqOnlineExam(
+        _this.$route.query.examPaperId,
+        _this.$route.query.userId
+      ).then((response) => {
         if (response.data.code == 200) {
           if (response.data.data.id == null) {
             _this.$toast("暂无试题");
@@ -247,6 +250,7 @@ export default {
         this.sort,
         this.myList.data.examPaperId,
         this.sort + 1,
+        this.$route.query.userId
       ).then((response) => {
         this.myList = response.data;
         // 考试题选中时
@@ -269,6 +273,7 @@ export default {
         this.answer,
         this.sort,
         this.myList.data.examPaperId,
+        this.$route.query.userId
       ).then((response) => {
         this.myResult = response.data;
         this.show = true;
@@ -443,6 +448,7 @@ label {
 .next .btn {
   color: #ffffff;
   background: #e4e5ea;
+  width: 100%;
 }
 .next button {
   line-height: 96px;
@@ -453,6 +459,7 @@ label {
   font-weight: 500;
   background: #e4e5ea;
   color: #ffffff;
+  width: 100%;
 }
 
 /* 未全部做完合格的提示框 */

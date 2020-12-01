@@ -59,7 +59,9 @@ export default {
   },
   methods: {
     getInitData: function () {
-      reqOnlineExamGetExamInfo(this.$route.query.id).then((response) => {
+      reqOnlineExamGetExamInfo(
+        this.$route.query.id
+      ).then((response) => {
         this.myData = response.data;
         window.passScore = response.data.data.passScore
         if (this.myData.data == undefined || this.myData.data == null) {
@@ -68,11 +70,12 @@ export default {
       });
     },
 
-    goto (path) {
+    goto (path, param) {
       return this.$router.push({
         path: path,
         query: {
           examPaperId: this.$route.query.id,
+          userId: this.$route.query.userId
         }
       });
     },
@@ -163,7 +166,7 @@ export default {
   margin: 68px 55px 225px 55px;
   /* width: 640px; */
   height: 96px;
-  background: #e4e5ea;
+  background: #f49537;
   border-radius: 8px;
   position: relative;
 }
@@ -174,11 +177,11 @@ export default {
   right: 0;
   top: 0;
   bottom: 0;
-  padding-top: 20px;
+  padding-top: 25px;
   font-size: 32px;
   font-family: PingFang SC;
   font-weight: 500;
-  color: #ed7430;
+  color: #ffffff;
 }
 
 /* 没有试题的情况下 */

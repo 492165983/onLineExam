@@ -39,9 +39,11 @@ export default {
         path: "/bank",
         query: {
           id: id,
+          userId: this.$route.query.userId
         },
       });
     },
+
   },
   computed: {
     isShow () {
